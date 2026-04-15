@@ -51,22 +51,34 @@ export default function App() {
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-lightning-blue rounded-lg flex items-center justify-center">
-              <Code2 className="text-deep-blue w-6 h-6" />
-            </div>
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2"
+          >
             <span className="font-display font-bold text-xl tracking-tight">
               THE CODE <span className="text-lightning-blue">HOUSE</span>
             </span>
-          </div>
+          </motion.div>
           
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
-            <a href="#" className="hover:text-lightning-blue transition-colors">WORK</a>
-            <a href="#" className="hover:text-lightning-blue transition-colors">SERVICES</a>
-            <a href="#" className="hover:text-lightning-blue transition-colors">PROCESS</a>
-            <button className="px-5 py-2.5 bg-lightning-blue text-deep-blue rounded-full font-bold hover:scale-105 transition-transform">
+            {["WORK", "SERVICES", "PROCESS"].map((item) => (
+              <motion.a
+                key={item}
+                href="#"
+                whileHover={{ scale: 1.05, color: "#00D1FF" }}
+                className="transition-colors"
+              >
+                {item}
+              </motion.a>
+            ))}
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2.5 bg-lightning-blue text-deep-blue rounded-full font-bold transition-transform"
+            >
               LET'S TALK
-            </button>
+            </motion.button>
           </div>
         </div>
       </nav>
@@ -76,50 +88,115 @@ export default function App() {
         <section className="relative pt-40 pb-20 px-6 overflow-hidden">
           {/* Background Decorative Elements */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-lightning-blue/10 blur-[120px] rounded-full animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-lightning-blue/5 blur-[120px] rounded-full" />
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.1, 1],
+                opacity: [0.1, 0.15, 0.1]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/4 left-1/4 w-96 h-96 bg-lightning-blue/10 blur-[120px] rounded-full" 
+            />
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.05, 0.08, 0.05]
+              }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-lightning-blue/5 blur-[120px] rounded-full" 
+            />
           </div>
 
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.2
+                    }
+                  }
+                }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lightning-blue/10 border border-lightning-blue/20 text-lightning-blue text-xs font-bold tracking-widest uppercase mb-6">
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lightning-blue/10 border border-lightning-blue/20 text-lightning-blue text-xs font-bold tracking-widest uppercase mb-6"
+                >
                   <Terminal className="w-3 h-3" />
                   Available for new projects
+                </motion.div>
+                
+                <div className="overflow-hidden mb-8">
+                  <motion.h1 
+                    variants={{
+                      hidden: { y: "100%" },
+                      visible: { y: 0 }
+                    }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="font-display text-6xl md:text-8xl font-extrabold leading-[0.9] tracking-tighter"
+                  >
+                    WE BUILD <br />
+                    <span className="text-lightning-blue">DIGITAL</span> <br />
+                    EXPERIENCES.
+                  </motion.h1>
                 </div>
                 
-                <h1 className="font-display text-6xl md:text-8xl font-extrabold leading-[0.9] tracking-tighter mb-8">
-                  WE BUILD <br />
-                  <span className="text-lightning-blue">DIGITAL</span> <br />
-                  EXPERIENCES.
-                </h1>
-                
-                <p className="text-zinc-400 text-lg md:text-xl max-w-lg mb-10 leading-relaxed">
+                <motion.p 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  className="text-zinc-400 text-lg md:text-xl max-w-lg mb-10 leading-relaxed"
+                >
                   The Code House is a boutique development agency specializing in high-performance, 
                   visually stunning websites that push the boundaries of the web.
-                </p>
+                </motion.p>
 
-                <div className="flex flex-wrap gap-4">
-                  <button className="group px-8 py-4 bg-lightning-blue text-deep-blue rounded-full font-bold text-lg flex items-center gap-2 hover:bg-white transition-colors">
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  className="flex flex-wrap gap-4"
+                >
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="group px-8 py-4 bg-lightning-blue text-deep-blue rounded-full font-bold text-lg flex items-center gap-2 hover:bg-white transition-colors"
+                  >
                     VIEW OUR WORK
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                  <button className="px-8 py-4 border border-zinc-700 rounded-full font-bold text-lg hover:bg-zinc-800 transition-colors">
+                  </motion.button>
+                  <motion.button 
+                    whileHover={{ scale: 1.05, backgroundColor: "rgba(39, 39, 42, 1)" }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-4 border border-zinc-700 rounded-full font-bold text-lg hover:bg-zinc-800 transition-colors"
+                  >
                     OUR SERVICES
-                  </button>
-                </div>
+                  </motion.button>
+                </motion.div>
 
-                <div className="mt-16 flex items-center gap-6 text-zinc-500">
-                  <Github className="w-6 h-6 hover:text-lightning-blue cursor-pointer transition-colors" />
-                  <Twitter className="w-6 h-6 hover:text-lightning-blue cursor-pointer transition-colors" />
-                  <Linkedin className="w-6 h-6 hover:text-lightning-blue cursor-pointer transition-colors" />
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1 }
+                  }}
+                  className="mt-16 flex items-center gap-6 text-zinc-500"
+                >
+                  {[Github, Twitter, Linkedin].map((Icon, i) => (
+                    <motion.div key={i} whileHover={{ scale: 1.2, color: "#00D1FF" }}>
+                      <Icon className="w-6 h-6 cursor-pointer transition-colors" />
+                    </motion.div>
+                  ))}
                   <div className="h-px w-12 bg-zinc-800" />
                   <span className="text-xs font-mono uppercase tracking-widest">Follow our journey</span>
-                </div>
+                </motion.div>
               </motion.div>
 
               <motion.div 
