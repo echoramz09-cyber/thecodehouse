@@ -4,7 +4,28 @@
  */
 
 import { motion } from "motion/react";
-import { Code2, ArrowRight, Github, Twitter, Linkedin, Terminal } from "lucide-react";
+import { Code2, ArrowRight, Github, Twitter, Linkedin, Terminal, Monitor, Briefcase, Palette, Sparkles } from "lucide-react";
+
+const services = [
+  {
+    title: "Website Building",
+    description: "Custom-built, responsive websites tailored to your unique vision and goals. We use the latest technologies to ensure speed and security.",
+    icon: Monitor,
+    delay: 0.1,
+  },
+  {
+    title: "Commercial Business Website Making",
+    description: "High-conversion websites designed specifically for businesses. From e-commerce to service portals, we drive growth through code.",
+    icon: Briefcase,
+    delay: 0.2,
+  },
+  {
+    title: "Graphic Designing",
+    description: "Stunning visual identities and digital assets that capture your brand's essence and leave a lasting impression on your audience.",
+    icon: Palette,
+    delay: 0.3,
+  },
+];
 
 const BackgroundParticles = () => {
   return (
@@ -249,6 +270,79 @@ export default function App() {
                 <div className="absolute -top-5 -right-5 md:-top-10 md:-right-10 w-24 h-24 md:w-40 md:h-40 border border-lightning-blue/20 rounded-full -z-10" />
                 <div className="absolute -bottom-10 -left-10 md:-bottom-20 md:-left-20 w-40 h-40 md:w-64 md:h-64 border border-lightning-blue/10 rounded-full -z-10" />
               </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Services Section */}
+        <section className="py-32 px-6 border-t border-zinc-900 bg-zinc-950/50 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-1/4 h-full bg-lightning-blue/5 blur-[120px] -z-10" />
+          
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col items-center text-center mb-20">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lightning-blue/10 border border-lightning-blue/20 text-lightning-blue text-xs font-bold tracking-widest uppercase mb-6"
+              >
+                <Sparkles className="w-3 h-3" />
+                Our Expertise
+              </motion.div>
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="font-display text-4xl md:text-6xl font-extrabold tracking-tighter mb-6"
+              >
+                SPECIALIZED <span className="text-lightning-blue">SERVICES</span>
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+              >
+                We blend technical expertise with creative vision to deliver digital solutions that stand out in a crowded market.
+              </motion.p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {services.map((service, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: service.delay, duration: 0.6 }}
+                  whileHover={{ y: -10 }}
+                  className="group p-8 rounded-3xl bg-zinc-900/50 border border-zinc-800 hover:border-lightning-blue/50 transition-all duration-300 relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <service.icon className="w-24 h-24 text-lightning-blue" />
+                  </div>
+                  
+                  <div className="w-14 h-14 bg-lightning-blue/10 rounded-2xl flex items-center justify-center mb-6 border border-lightning-blue/20 group-hover:bg-lightning-blue group-hover:text-deep-blue transition-colors">
+                    <service.icon className="w-7 h-7" />
+                  </div>
+                  
+                  <h3 className="font-display text-2xl font-bold mb-4 tracking-tight group-hover:text-lightning-blue transition-colors leading-tight">
+                    {service.title}
+                  </h3>
+                  
+                  <p className="text-zinc-400 leading-relaxed text-sm mb-6">
+                    {service.description}
+                  </p>
+                  
+                  <motion.div 
+                    className="flex items-center gap-2 text-lightning-blue text-sm font-bold tracking-widest uppercase cursor-pointer"
+                    whileHover={{ x: 5 }}
+                  >
+                    Learn More
+                    <ArrowRight className="w-4 h-4" />
+                  </motion.div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
