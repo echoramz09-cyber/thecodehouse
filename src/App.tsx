@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { 
   Code2, ArrowRight, Github, Twitter, Linkedin, Terminal, 
   Monitor, Briefcase, Palette, Sparkles, Plus, Trash2, 
-  ExternalLink, LogIn, LogOut, X, Loader2 
+  ExternalLink, LogIn, LogOut, X, Loader2, IndianRupee, Zap, ShieldCheck 
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import * as React from "react";
@@ -712,6 +712,87 @@ export default function App() {
                     Learn More
                     <ArrowRight className="w-4 h-4" />
                   </motion.div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose Us Section */}
+        <section id="why-us" className="py-32 px-6 border-t border-zinc-900 relative">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col items-center text-center mb-20">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lightning-blue/10 border border-lightning-blue/20 text-lightning-blue text-xs font-bold tracking-widest uppercase mb-6"
+              >
+                <Terminal className="w-3 h-3" />
+                The House Advantage
+              </motion.div>
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="font-display text-4xl md:text-6xl font-extrabold tracking-tighter mb-6 uppercase"
+              >
+                WHY CHOOSE <span className="text-lightning-blue">US??</span>
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+              >
+                We deliver world-class digital solutions with a focus on value, speed, and uncompromising quality.
+              </motion.p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-12">
+              {[
+                {
+                  title: "UNBEATABLE VALUE",
+                  description: "We are proud to be the MOST AFFORDABLE agency in India, delivering premium quality at prices that empower local businesses.",
+                  icon: IndianRupee,
+                  delay: 0.1
+                },
+                {
+                  title: "LIGHTNING PERFORMANCE",
+                  description: "Our websites aren't just pretty—they are optimized for speed, ensuring your users never have to wait for your story to load.",
+                  icon: Zap,
+                  delay: 0.2
+                },
+                {
+                  title: "ROCK-SOLID SECURITY",
+                  description: "Built with the latest security protocols and 24/7 reliability, we ensure your business is protected in the digital frontier.",
+                  icon: ShieldCheck,
+                  delay: 0.3
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: item.delay }}
+                  className="relative p-10 rounded-[40px] bg-zinc-900/40 border border-zinc-800 hover:border-lightning-blue/40 transition-all duration-500 overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 p-6 opacity-5">
+                    <item.icon className="w-32 h-32 text-lightning-blue" />
+                  </div>
+                  
+                  <div className="w-16 h-16 bg-lightning-blue/10 rounded-2xl flex items-center justify-center mb-8 border border-lightning-blue/20">
+                    <item.icon className="w-8 h-8 text-lightning-blue" />
+                  </div>
+                  
+                  <h3 className="font-display text-2xl font-bold mb-4 tracking-tight uppercase">
+                    {item.title}
+                  </h3>
+                  
+                  <p className="text-zinc-400 leading-relaxed">
+                    {item.description}
+                  </p>
                 </motion.div>
               ))}
             </div>
