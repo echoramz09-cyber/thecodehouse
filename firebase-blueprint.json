@@ -1,0 +1,23 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "A showcase project in the portfolio",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Title of the project" },
+        "description": { "type": "string", "description": "Brief description of the project" },
+        "imageUrl": { "type": "string", "description": "URL of the preview image" },
+        "projectUrl": { "type": "string", "description": "Link to the live website" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of creation" }
+      },
+      "required": ["title", "imageUrl", "projectUrl", "createdAt"]
+    }
+  },
+  "firestore": {
+    "projects": {
+      "schema": "Project",
+      "description": "Collection of portfolio projects"
+    }
+  }
+}

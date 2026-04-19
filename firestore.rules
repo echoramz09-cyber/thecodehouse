@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Projects collection
+    match /projects/{projectId} {
+      // Anyone can read projects
+      allow read: if true;
+      
+      // Only authenticated admin can write
+      // We'll use a specific email for the admin
+      allow create: if isAdmin() && isValidProject(request.resource.data);
+      allow update: if isAdmin() && isValidProject(request.resource.data) 
+                    && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'imageUrl', 'projectUrl', 'updatedAt']));
+      allow delete: if isAdmin();
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      // In a real app, you'd check a roles collection or a specific UID.
+      // For this portfolio, we'll check for the specific admin email.
+      return isSignedIn() && request.auth.token.email == 'asxramzonfire09@thecodehouse.com';
+    }
+
+    function isValidProject(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 100
+          && data.imageUrl is string && data.imageUrl.size() > 0
+          && data.projectUrl is string && data.projectUrl.size() > 0
+          && (data.description == null || (data.description is string && data.description.size() <= 500));
+    }
+  }
+}
