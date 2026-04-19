@@ -7,13 +7,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { 
   Code2, ArrowRight, Github, Twitter, Linkedin, Terminal, 
   Monitor, Briefcase, Palette, Sparkles, Plus, Trash2, 
-  ExternalLink, LogIn, LogOut, X, Loader2, IndianRupee, Zap, ShieldCheck 
+  ExternalLink, LogIn, LogOut, X, Loader2, IndianRupee, Zap, ShieldCheck,
+  Instagram, MessageSquare, Layout
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import * as React from "react";
 import { 
   collection, onSnapshot, query, orderBy, addDoc, 
-  deleteDoc, doc, serverTimestamp 
+  deleteDoc, doc, serverTimestamp, setDoc 
 } from "firebase/firestore";
 import { 
   signInWithEmailAndPassword, onAuthStateChanged, signOut, 
@@ -90,6 +91,14 @@ export default function App() {
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   
+  const [socials, setSocials] = useState({
+    instagram: "",
+    linkedin: "",
+    discord: "",
+    behance: ""
+  });
+  const [isUpdatingSocials, setIsUpdatingSocials] = useState(false);
+  
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProject, setNewProject] = useState({
     title: "",
@@ -119,9 +128,16 @@ export default function App() {
       setProjects(data);
     });
 
+    const unsubSocials = onSnapshot(doc(db, "settings", "socials"), (snapshot) => {
+      if (snapshot.exists()) {
+        setSocials(snapshot.data() as any);
+      }
+    });
+
     return () => {
       unsubAuth();
       unsubDocs();
+      unsubSocials();
     };
   }, []);
 
@@ -186,6 +202,21 @@ export default function App() {
     }
   };
 
+  const handleUpdateSocials = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsUpdatingSocials(true);
+    try {
+      await setDoc(doc(db, "settings", "socials"), {
+        ...socials,
+        updatedAt: serverTimestamp()
+      });
+    } catch (err) {
+      console.error("Error updating socials:", err);
+    } finally {
+      setIsUpdatingSocials(false);
+    }
+  };
+
   const handleDeleteProject = async (id: string) => {
     try {
       await deleteDoc(doc(db, "projects", id));
@@ -193,6 +224,18 @@ export default function App() {
       console.error("Error deleting project:", err);
     }
   };
+
+  const DiscordIcon = (props: any) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C1.533 9.046 1.05 13.58 1.443 18.067a.072.072 0 0 0 .033.05 19.821 19.821 0 0 0 5.964 3.018.077.077 0 0 0 .085-.028c.463-.637.861-1.307 1.195-2.01a.076.076 0 0 0-.041-.105 13.11 13.11 0 0 1-1.857-.885.077.077 0 0 1-.008-.128c.125-.094.252-.192.373-.291a.073.073 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.071.071 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.857.884.076.076 0 0 0-.041.106c.33.702.729 1.372 1.192 2.009a.077.077 0 0 0 .085.029 19.814 19.814 0 0 0 5.973-3.02.077.077 0 0 0 .033-.049c.515-5.228-0.87-9.72-3.665-13.67a.066.066 0 0 0-.031-.026zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.42 0-1.336.953-2.422 2.157-2.422 1.213 0 2.176 1.096 2.156 2.422 0 1.335-0.953 2.42-2.156 2.42zm7.975 0c-1.183 0-2.157-1.085-2.157-2.42 0-1.336.955-2.422 2.157-2.422 1.213 0 2.176 1.096 2.156 2.422 0 1.335-0.943 2.42-2.156 2.42z"/>
+    </svg>
+  );
+
+  const BehanceIcon = (props: any) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M22 14.364h-7.636c.11 1.636 1.411 2.345 3.12 2.345 1.418 0 2.65-.63 2.768-2.094h1.727c-.237 2.182-1.954 3.6-4.502 3.6-3.15 0-5.118-2.15-5.118-5.183 0-3.046 1.944-5.218 5.118-5.218 3.102 0 4.523 2.21 4.523 5.218 0 .1-.01.216-.02.332zm-7.614-1.31h5.83c-.09-1.36-.93-2.06-2.5-2.06-1.637 0-3.004.814-3.33 2.06zM6.92 6.545c2.46 0 4.14 1.134 4.14 3.09 0 1.24-.766 2.23-1.966 2.62v.064c1.623.27 2.614 1.48 2.614 3.018 0 2.28-2.227 3.42-4.787 3.42H2V6.545h4.92zm-1.05 5.564c1.47 0 2.484-.5 2.484-1.745 0-1.127-.92-1.755-2.31-1.755h-2.1V12.11h1.926zm.543 5.464c1.604 0 2.822-.64 2.822-1.99s-1.164-1.936-2.924-1.936H3.87V17.573h2.544zM20.182 8h-4.364V6.91h4.364V8z"/>
+    </svg>
+  );
 
   const isAdmin = user && user.email === ADMIN_EMAIL;
 
@@ -317,6 +360,66 @@ export default function App() {
                       TERMINATE SESSION
                     </button>
                   </div>
+                </div>
+
+                {/* Social Registry Card */}
+                <div className="bg-zinc-900/50 border border-zinc-800 rounded-[32px] p-8">
+                  <h2 className="font-display text-2xl font-bold mb-8 uppercase tracking-tight flex items-center gap-3">
+                    <Terminal className="text-lightning-blue w-6 h-6" /> SOCIAL REGISTRY
+                  </h2>
+                  <form onSubmit={handleUpdateSocials} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <div>
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 px-1">Instagram Link</label>
+                        <input 
+                          type="url" 
+                          value={socials.instagram}
+                          onChange={(e) => setSocials({...socials, instagram: e.target.value})}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-lightning-blue transition-colors text-sm"
+                          placeholder="https://instagram.com/..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 px-1">LinkedIn Link</label>
+                        <input 
+                          type="url" 
+                          value={socials.linkedin}
+                          onChange={(e) => setSocials({...socials, linkedin: e.target.value})}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-lightning-blue transition-colors text-sm"
+                          placeholder="https://linkedin.com/..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 px-1">Discord Link</label>
+                        <input 
+                          type="url" 
+                          value={socials.discord}
+                          onChange={(e) => setSocials({...socials, discord: e.target.value})}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-lightning-blue transition-colors text-sm"
+                          placeholder="https://discord.gg/..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 px-1">Behance Link</label>
+                        <input 
+                          type="url" 
+                          value={socials.behance}
+                          onChange={(e) => setSocials({...socials, behance: e.target.value})}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-lightning-blue transition-colors text-sm"
+                          placeholder="https://behance.net/..."
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <button 
+                        type="submit"
+                        disabled={isUpdatingSocials}
+                        className="px-8 py-3 bg-lightning-blue text-deep-blue rounded-full font-bold hover:bg-white transition-colors flex items-center gap-2"
+                      >
+                        {isUpdatingSocials ? <Loader2 className="w-4 h-4 animate-spin" /> : "UPDATE REGISTRY"}
+                      </button>
+                    </div>
+                  </form>
                 </div>
 
                 <div className="grid gap-6">
@@ -474,15 +577,31 @@ export default function App() {
                     hidden: { opacity: 0 },
                     visible: { opacity: 1 }
                   }}
-                  className="mt-16 flex items-center gap-6 text-zinc-500"
+                  className="mt-16 flex flex-col gap-6"
                 >
-                  {[Github, Twitter, Linkedin].map((Icon, i) => (
-                    <motion.div key={i} whileHover={{ scale: 1.2, color: "#00D1FF" }}>
-                      <Icon className="w-6 h-6 cursor-pointer transition-colors" />
-                    </motion.div>
-                  ))}
-                  <div className="h-px w-12 bg-zinc-800" />
-                  <span className="text-xs font-mono uppercase tracking-widest">Follow our journey</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs font-mono uppercase tracking-[0.3em] text-zinc-500">FOLLOW OUR JOURNEY</span>
+                    <div className="h-px w-12 bg-zinc-800" />
+                  </div>
+                  <div className="flex gap-6">
+                    {[
+                      { icon: Instagram, url: socials.instagram },
+                      { icon: Linkedin, url: socials.linkedin },
+                      { icon: DiscordIcon, url: socials.discord },
+                      { icon: BehanceIcon, url: socials.behance }
+                    ].map((social, i) => social.url ? (
+                      <motion.a
+                        key={i}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.2, color: "#00D1FF" }}
+                        className="text-zinc-600 transition-colors"
+                      >
+                        <social.icon className="w-6 h-6" />
+                      </motion.a>
+                    ) : null)}
+                  </div>
                 </motion.div>
               </motion.div>
 

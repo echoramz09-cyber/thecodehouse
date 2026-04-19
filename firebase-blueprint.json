@@ -12,12 +12,28 @@
         "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of creation" }
       },
       "required": ["title", "imageUrl", "projectUrl", "createdAt"]
+    },
+    "Socials": {
+      "title": "Socials",
+      "description": "Social media links for the portfolio",
+      "type": "object",
+      "properties": {
+        "instagram": { "type": "string" },
+        "linkedin": { "type": "string" },
+        "discord": { "type": "string" },
+        "behance": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "firestore": {
     "projects": {
       "schema": "Project",
       "description": "Collection of portfolio projects"
+    },
+    "settings": {
+      "schema": "Socials",
+      "description": "Application settings and social links"
     }
   }
 }

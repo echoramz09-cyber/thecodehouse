@@ -20,6 +20,12 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // Settings collection (socials)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidSocials(request.resource.data);
+    }
+
     // Helper functions
     function isSignedIn() {
       return request.auth != null;
@@ -36,6 +42,13 @@ service cloud.firestore {
           && data.imageUrl is string && data.imageUrl.size() > 0
           && data.projectUrl is string && data.projectUrl.size() > 0
           && (data.description == null || (data.description is string && data.description.size() <= 500));
+    }
+
+    function isValidSocials(data) {
+      return (data.instagram is string || data.instagram == null)
+          && (data.linkedin is string || data.linkedin == null)
+          && (data.discord is string || data.discord == null)
+          && (data.behance is string || data.behance == null);
     }
   }
 }
