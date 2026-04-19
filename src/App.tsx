@@ -16,7 +16,8 @@ import {
   deleteDoc, doc, serverTimestamp 
 } from "firebase/firestore";
 import { 
-  signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword 
+  signInWithEmailAndPassword, onAuthStateChanged, signOut, 
+  createUserWithEmailAndPassword, setPersistence, browserLocalPersistence 
 } from "firebase/auth";
 import { db, auth } from "./lib/firebase";
 import { Project } from "./types";
@@ -100,6 +101,11 @@ export default function App() {
   const ADMIN_EMAIL = "asxramzonfire09@thecodehouse.com";
 
   useEffect(() => {
+    // Ensure persistence is local (stays logged in on the device)
+    setPersistence(auth, browserLocalPersistence).catch(err => {
+      console.error("Persistence error:", err);
+    });
+
     const unsubAuth = onAuthStateChanged(auth, (u) => {
       setUser(u);
     });
@@ -133,7 +139,12 @@ export default function App() {
       } catch (signInErr: any) {
         // If user doesn't exist and it's our admin email, create it
         if ((signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential') && email === ADMIN_EMAIL) {
-          await createUserWithEmailAndPassword(auth, email, password);
+          try {
+            await createUserWithEmailAndPassword(auth, email, password);
+          } catch (createErr: any) {
+            // If creation fails (e.g. user already exists but password was wrong), throw the original sign-in error
+            throw signInErr;
+          }
         } else {
           throw signInErr;
         }
@@ -142,7 +153,13 @@ export default function App() {
       setPassword("");
     } catch (err: any) {
       console.error("Login error:", err);
-      setLoginError("Invalid credentials");
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        setLoginError("Invalid credentials. Please check your password.");
+      } else if (err.code === 'auth/too-many-requests') {
+        setLoginError("Too many failed attempts. Try again later.");
+      } else {
+        setLoginError(`System error: ${err.message}`);
+      }
     } finally {
       setIsLoggingIn(false);
     }
@@ -206,14 +223,6 @@ export default function App() {
                 {item}
               </motion.a>
             ))}
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setView(view === 'portfolio' ? 'admin' : 'portfolio')}
-              className="px-5 py-2.5 bg-lightning-blue text-deep-blue rounded-full font-bold transition-transform flex items-center gap-2"
-            >
-              {view === 'portfolio' ? <><Terminal className="w-4 h-4" /> CONSOLE</> : <><ArrowRight className="w-4 h-4 rotate-180" /> EXIT CONSOLE</>}
-            </motion.button>
           </div>
         </div>
       </nav>
