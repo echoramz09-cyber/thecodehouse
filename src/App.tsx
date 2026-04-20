@@ -47,7 +47,7 @@ const services = [
 const BackgroundParticles = () => {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-      {[...Array(30)].map((_, i) => (
+      {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute w-1.5 h-1.5 bg-lightning-blue/60 rounded-full shadow-[0_0_8px_rgba(0,209,255,0.8)]"
