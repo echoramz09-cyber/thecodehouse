@@ -44,43 +44,44 @@ const services = [
   },
 ];
 
-const BackgroundParticles = () => {
+const BackgroundParticles = React.memo(() => {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute w-1.5 h-1.5 bg-lightning-blue/60 rounded-full shadow-[0_0_8px_rgba(0,209,255,0.8)]"
+          style={{ willChange: "transform, opacity" }}
           initial={{
-            left: Math.random() * 100 + "%",
-            top: Math.random() * 100 + "%",
+            x: `${Math.random() * 100}vw`,
+            y: `${Math.random() * 100}vh`,
             opacity: Math.random() * 0.5 + 0.3,
             scale: Math.random() * 0.5 + 0.5,
           }}
           animate={{
-            left: [
-              Math.random() * 100 + "%",
-              Math.random() * 100 + "%",
-              Math.random() * 100 + "%",
+            x: [
+              `${Math.random() * 100}vw`,
+              `${Math.random() * 100}vw`,
+              `${Math.random() * 100}vw`,
             ],
-            top: [
-              Math.random() * 100 + "%",
-              Math.random() * 100 + "%",
-              Math.random() * 100 + "%",
+            y: [
+              `${Math.random() * 100}vh`,
+              `${Math.random() * 100}vh`,
+              `${Math.random() * 100}vh`,
             ],
             opacity: [0.3, 0.8, 0.3],
             scale: [1, 1.2, 1],
           }}
           transition={{
-            duration: Math.random() * 15 + 15,
+            duration: Math.random() * 20 + 20, // Slower for better performance
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: "linear", // Linear is easier to calculate over long paths
           }}
         />
       ))}
     </div>
   );
-};
+});
 
 export default function App() {
   const [view, setView] = useState<'portfolio' | 'admin'>('portfolio');
@@ -624,7 +625,7 @@ export default function App() {
                   <motion.div 
                     animate={{ y: [0, -10, 0] }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-8 p-4 md:p-6 rounded-2xl bg-zinc-900/90 backdrop-blur-xl border border-lightning-blue/30 shadow-lightning-blue/10 shadow-2xl"
+                    className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-8 p-4 md:p-6 rounded-2xl bg-zinc-900/90 backdrop-blur-md border border-lightning-blue/30 shadow-lightning-blue/10 shadow-2xl"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex gap-1.5">
@@ -929,7 +930,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-zinc-950/90 backdrop-blur-xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-zinc-950/90 backdrop-blur-md"
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
